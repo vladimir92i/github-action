@@ -1,0 +1,22 @@
+name: Node.js CI
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['main']
+
+jobs:
+  .pre:
+    script:
+      # define cache dir & use it npm!
+      - npm ci --cache .npm --prefer-offline
+      
+  validate:
+	
+  test:
+	
+  build:
+	
+  release:
+	
+  deploy:
