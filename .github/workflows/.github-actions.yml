@@ -10,8 +10,19 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    
-    if: '$CI_COMMIT_BRANCH == "main" && $CI_COMMIT_TAG == null && $CI_COMMIT_TITLE !~ /^chore: release/'
+    steps:
+      - uses: actions/checkout@v3
+      - name: checks things
+
+        if: github.ref_name == 'main' && github.ref_type != 'tag' && github.event.head_commit.message != 'release'
+      
+        run: 
+          git config user.email $GITLAB_USER_EMAIL
+          git config user.name $GITLAB_USER_NAME
+          git remote set-url origin "https://gitlab-ci-token:$GITLAB_TOKEN@$CI_SERVER_HOST/$CI_PROJECT_PATH.git"
+          git checkout $CI_COMMIT_BRANCH
+          git pull origin $CI_COMMIT_BRANCH --rebase
+          npx --yes release-it --ci
 
   build:
     runs-on: ubuntu-latest
